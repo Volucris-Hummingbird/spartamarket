@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>로그인</h1>
+<h1>로그인</h1>
 
+<form action="{% url 'accounts:login' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+
+<a href="{% url 'accounts:signup' %}">
+    <button type="submit">sign_up</button>
+</a>
 {% endblock content %}
 
 <!-- submit 버튼 누르고 로그인이 되면 articles/mainpage로 이동하게하기 .  -->

@@ -1,6 +1,39 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>로그인</h1>
+
+<div class="navbar">
+</div>
+
+
+<div class="container">
+    {% block content %}
+    <h1>Hello, {{ user }}</h1>
+    <form action="{% url 'accounts:logout' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="로그아웃">
+    </form>
+
+
+    <!-- 글 작성 버튼 만들기. -->
+    <a href="{% url 'articles:new' %}" method="POST">
+        게시글 작성
+    </a>
+
+
+    <!--  게시글 보여주기 -->
+    <ul>
+        {% for article in articles %}
+            <li>
+                <div>글 번호 : {{ article.id }}</div>
+                <div>글 제목 : {{ article.title }}</div>
+                <div>제품 사진 : {{ article.image }}</div>
+                <!-- image가 char로 출력되는 문제가 있음.  -->
+                <div>글 내용 : {{ article.content }}</div>
+                <br>
+            </li>
+        {% endfor %}
+    </ul>
+    
+</div>
 
 {% endblock content %}
