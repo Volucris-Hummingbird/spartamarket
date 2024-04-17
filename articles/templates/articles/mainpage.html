@@ -6,12 +6,22 @@
 
 
 <div class="container">
-    {% block content %}
-    <h1>Hello, {{ user }}</h1>
-    <form action="{% url 'accounts:logout' %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="로그아웃">
-    </form>
+    {% block content %} 
+    {% if request.user.is_authenticated %}
+        <h1>Hello, {{ user }}</h1>
+        <a href="{% url 'users:profile' user.username %}">
+            내 프로필 보기
+        </a>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="로그아웃">
+        </form>
+    {% else %}
+        <a href="{% url 'accounts:login'%}"></a>
+    {% endif %}
+
+
+
 
 
     <!-- 글 작성 버튼 만들기. -->
@@ -23,17 +33,19 @@
     <!--  게시글 보여주기 -->
     <ul>
         {% for article in articles %}
-            <li>
-                <div>글 번호 : {{ article.id }}</div>
-                <div>글 제목 : {{ article.title }}</div>
-                <div>제품 사진 : {{ article.image }}</div>
-                <!-- image가 char로 출력되는 문제가 있음.  -->
-                <div>글 내용 : {{ article.content }}</div>
-                <br>
-            </li>
+        <li>
+            <a href="{% url 'articles:detail' article.id %}">
+                <div>[{{ article.id }}] {{ article.title }}</div>
+            </a>
+
+            {% if article.image %}
+            <div><img src="{{ article.image.url }}" alt="제품사진"></div>
+            {% endif %}
+
+            <br>
+        </li>
         {% endfor %}
     </ul>
-    
 </div>
 
 {% endblock content %}

@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.views import logout_then_login
+from .models import User
+from .forms import SignUpForm
 
 
 # 로그인 - 첫 화면
@@ -27,21 +29,21 @@ def login(request):
 
 
 @require_POST
+@login_required
 def logout(request):
     # if request.user.is_authenticated:
     return logout_then_login(request)
 
 
 # 회원가입
-from django.contrib.auth.forms import UserCreationForm
 
 def signup(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("accounts:login")
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
     context = {"form": form}
     return render(request, "accounts/signup.html", context)

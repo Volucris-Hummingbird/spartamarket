@@ -34,6 +34,8 @@ urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
     path("articles/", include("articles.urls")),
     path("accounts/", include("accounts.urls")),
+    path("users/", include("users.urls")),
+
 ]
 
 if settings.DEBUG:
