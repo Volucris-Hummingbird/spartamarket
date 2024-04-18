@@ -10,5 +10,4 @@ class ArticleForm(forms.ModelForm):
         fields = ('title', 'content', 'image')
         # 유효성 검사의 항목을 넣어주는 영역이기 때문에 author_id를 건너뛰어주어야 한다. 
         
-        
-        
+

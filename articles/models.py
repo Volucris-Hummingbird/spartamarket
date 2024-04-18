@@ -12,3 +12,21 @@ class Article(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="articles"
     )
+
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="like_articles")
+    
+    views = models.IntegerField(default=0)
+    
+    def increment_views(self):
+        self.views += 1
+        self.save()
+
+
+class ArticleLike(models.Model):
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, related_name="likes"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes"
+    )

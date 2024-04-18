@@ -1,47 +1,49 @@
 {% extends "base.html" %}
 
-
+{% block content %}
 <div class="navbar">
+    {% if request.user.is_authenticated %}
+    <h1>Hello, {{ user }}</h1>
+    <div class="write-article">
+        <a href="{% url 'users:profile' user.username %}">내 프로필 보기</a>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-danger" value="로그아웃">
+        </form>
+    </div>
+    {% else %}
+    <a href="{% url 'accounts:login'%}" class="btn">로그인</a>
+    {% endif %}
+    <!-- 게시글 작성 버튼 -->
+    <div class="write-article">
+        <a href="{% url 'articles:new' %}" class="btn btn-lg btn-primary">게시글 작성</a>
+    </div>
+</div>
 </div>
 
 
+
 <div class="container">
-    {% block content %} 
-    {% if request.user.is_authenticated %}
-        <h1>Hello, {{ user }}</h1>
-        <a href="{% url 'users:profile' user.username %}">
-            내 프로필 보기
-        </a>
-        <form action="{% url 'accounts:logout' %}" method="POST">
-            {% csrf_token %}
-            <input type="submit" value="로그아웃">
-        </form>
-    {% else %}
-        <a href="{% url 'accounts:login'%}"></a>
-    {% endif %}
-
-
-
-
-
-    <!-- 글 작성 버튼 만들기. -->
-    <a href="{% url 'articles:new' %}" method="POST">
-        게시글 작성
-    </a>
-
-
+    <form method="GET" action="{% url 'articles:sorted_articles' %}">
+        <label for="sort_criteria">정렬 기준:</label>
+        <select name="sort_criteria" id="sort_criteria">
+            <option value='created_at'>생성날짜(최신순)</option>
+            <option value='likes'>좋아요순</option>
+            <option value='views'>조회수순</option>
+        </select>
+        <input type="submit" value="정렬">
+    </form>
     <!--  게시글 보여주기 -->
+    <!-- 여기에 직접 form(url-view=을 작성하여 입력을 받고 order_by -->
     <ul>
         {% for article in articles %}
         <li>
             <a href="{% url 'articles:detail' article.id %}">
                 <div>[{{ article.id }}] {{ article.title }}</div>
             </a>
-
             {% if article.image %}
             <div><img src="{{ article.image.url }}" alt="제품사진"></div>
             {% endif %}
-
             <br>
         </li>
         {% endfor %}

@@ -6,25 +6,37 @@
 <div>
     <h2>username : {{ member.username }}</h2>
 
-    <p>팔로워 수: {{ member.profile.follower_count }}</p>
-    <p>팔로잉 수: {{ member.profile.following_count }}</p>
+    <p>팔로워 수: {{ follower_count }}</p>
+    <p>팔로잉 수: {{ following_count }}</p>
 
-    <!-- 팔로워, 팔로잉 수가 표시, 계산되지 않는다. 뭐가 문제지? -->
-    <!-- ORM 자료 한번더 봐보기 -->
+
 
     {% if request.user != member %}
     <form action="{% url 'users:follow' member.pk %}" method="POST">
         {% csrf_token %}
         {% if request.user in member.followers.all %}
-        <input type="submit" value="언팔로우">
+        <input type="submit" class="btn" value="언팔로우">
         {% else %}
-        <input type="submit" value="팔로우">
+        <input type="submit" class="btn" value="팔로우">
         {% endif %}
     </form>
     {% endif %}
 </div>
 
 
-<a href="{% url 'articles:mainpage' %}">홈으로 돌아가기</a>
+<!-- 좋아요 목록 보여주기  -->
+<h2>좋아하는 글 목록</h2>
+<ul>
+    {% for article in liked_articles %}
+    <li>
+        <a href="{% url 'articles:detail' article.id %}">
+            <div>[{{ article.id }}] {{ article.title }}</div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'accounts:change_password' %}" class="btn">비밀번호 변경</a>
+<a href="{% url 'articles:mainpage' %}" class="btn">홈으로 돌아가기</a>
 
 {% endblock content %}

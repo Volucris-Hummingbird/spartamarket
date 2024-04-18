@@ -22,7 +22,7 @@ def mainpage(request):
     context = {
         "articles": articles,
     }
-    return render(request, "articles/mainpage.html", context)
+    return sorted_articles(request)
 
 
 @login_required
@@ -55,7 +55,6 @@ def create(request):
     return render(request, "articles/new.html", {'form': form})
 
 
-
 @login_required
 @require_POST
 def delete(request, pk):
@@ -81,7 +80,7 @@ def update(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.user == article.author:
 
-    # if request.user.is_authenticated:
+        # if request.user.is_authenticated:
         if request.method == "POST":
             form = ArticleForm(request.POST, instance=article)
             if form.is_valid():
@@ -95,3 +94,33 @@ def update(request, pk):
         "form": form,
         "article": article, }
     return render(request, "articles/edit.html", context)
+
+
+@require_POST
+def like(request, pk):
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=pk)
+        if article.like_users.filter(pk=request.user.pk).exists():
+            article.like_users.remove(request.user)
+        else:
+            article.like_users.add(request.user)
+    else:
+        return redirect("accounts:login")
+
+    return redirect("articles:detail", article.pk)
+
+
+def sorted_articles(request):
+    sort_criteria = request.GET.get('sort_criteria')
+
+    if sort_criteria == 'like_users':
+        sorted_articles = Article.objects.all().order_by('-like_users__count')
+    elif sort_criteria == 'views':
+        sorted_articles = Article.objects.all().order_by('-views')
+    elif sort_criteria == 'created_at':
+        sorted_articles = Article.objects.all().order_by('-created_at')
+    else:
+        # 기본적으로 생성 날짜를 기준으로 정렬
+        sorted_articles = Article.objects.all().order_by('-created_at')
+
+    return render(request, 'articles/mainpage.html', {'articles': sorted_articles})

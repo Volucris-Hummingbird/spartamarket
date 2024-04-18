@@ -14,9 +14,14 @@ urlpatterns = [
     path("<int:pk>/delete/", views.delete, name="delete"),
     path("<int:pk>/edit", views.edit, name="edit"),
     path("<int:pk>/update/", views.update, name="update"),
+    path("sorted_articles/", views.sorted_articles, name="sorted_articles"),
+
+
+    path("<int:pk>/like/", views.like, name="like"),
 
 ]
 
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
