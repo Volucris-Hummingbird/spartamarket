@@ -38,6 +38,5 @@ python manage.py runserver
 localhost http://127.0.0.1:8000/
 
 ## ERD
-<p align="center">
-  <img src="(https://github.com/Volucris-Hummingbird/spartamarket/assets/159241129/62731a36-1f7d-494d-a66f-04e31b741e7e)">
-</p>
+
+![Spartamarket_lim_ERD](https://github.com/Volucris-Hummingbird/spartamarket/assets/159241129/8587842d-d2a0-42a8-944e-b300cd1dc67d)
