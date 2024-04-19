@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.views import logout_then_login
-from .models import Article
-from .forms import ArticleForm
+from .models import Article, Comment
+from .forms import ArticleForm, CommentForm
 from django.http import HttpResponseForbidden
 
 # from .forms import CustomUserChangeForm
@@ -33,8 +33,13 @@ def new(request):
 @login_required
 def detail(request, pk):
     article = get_object_or_404(Article, pk=pk)
+    comment_form = CommentForm()
+    comments = article.comments.all().order_by("-pk")
     context = {
-        "article": article, }
+        "article": article,
+        "comment_form": comment_form,
+        "comments": comments,
+    }
     return render(request, "articles/detail.html", context)
 
 
@@ -124,3 +129,33 @@ def sorted_articles(request):
         sorted_articles = Article.objects.all().order_by('-created_at')
 
     return render(request, 'articles/mainpage.html', {'articles': sorted_articles})
+
+
+@require_POST
+def comment_create(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.article = article
+        comment.user = request.user
+        comment.save()
+        return redirect("articles:detail", article.pk)
+
+
+@require_POST
+def comment_delete(request, pk, comment_pk):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(Comment, pk=comment_pk)
+        if comment.user == request.user:
+            comment.delete()
+    return redirect("articles:detail", pk)
+
+
+def search_articles(request):
+    query = request.GET.get('q')
+    articles = Article.objects.filter(title__icontains=query) | \
+        Article.objects.filter(content__icontains=query) | \
+        Article.objects.filter(author__username__icontains=query)
+    context = {'articles': articles}
+    return render(request, 'articles/mainpage.html', context)

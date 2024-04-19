@@ -16,14 +16,22 @@
     {% endif %}
     <!-- 게시글 작성 버튼 -->
     <div class="write-article">
-        <a href="{% url 'articles:new' %}" class="btn btn-lg btn-primary">게시글 작성</a>
+        <a href="{% url 'articles:new' %}" class="btn btn-primary">게시글 작성</a>
     </div>
 </div>
-</div>
 
+<hr>
 
 
 <div class="container">
+    <form method="GET" action="{% url 'articles:search' %}">
+        <label for="search_query">검색:</label>
+        <input type="text" name="q" id="search_query">
+        <input type="submit" value="검색">
+    </form>
+    <!-- 검색창 -->
+
+    
     <form method="GET" action="{% url 'articles:sorted_articles' %}">
         <label for="sort_criteria">정렬 기준:</label>
         <select name="sort_criteria" id="sort_criteria">
@@ -35,7 +43,6 @@
     </form>
     <!--  게시글 보여주기 -->
     <!-- 여기에 직접 form(url-view=을 작성하여 입력을 받고 order_by -->
-    <ul>
         {% for article in articles %}
         <li>
             <a href="{% url 'articles:detail' article.id %}">
@@ -47,7 +54,6 @@
             <br>
         </li>
         {% endfor %}
-    </ul>
 </div>
 
 {% endblock content %}

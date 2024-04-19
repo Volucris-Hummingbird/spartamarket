@@ -1,28 +1,4 @@
 img {
-    width: 200px;
+    width: 600px;
     height: auto;
-}
-
-.hr-style {
-    border: none;
-    height: 1px;
-    background-color: #FFA500; 
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.btn {
-    background-color: #FFA500;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-right: 10px;
-}
-
-.btn:hover {
-    background-color: #FFD700;
 }

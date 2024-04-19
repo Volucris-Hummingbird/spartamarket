@@ -15,9 +15,9 @@ class Article(models.Model):
 
     like_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="like_articles")
-    
+
     views = models.IntegerField(default=0)
-    
+
     def increment_views(self):
         self.views += 1
         self.save()
@@ -30,3 +30,18 @@ class ArticleLike(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes"
     )
+
+
+class Comment(models.Model):
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, related_name="comments"
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="comments"
+    )
+    content = models.CharField(max_length=120)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updaetd_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.content

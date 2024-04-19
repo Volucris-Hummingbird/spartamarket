@@ -5,7 +5,8 @@
     <h2 class="heading">글 상세 페이지</h2>
     <div class="article-details">
         <p class="article-title">제목: {{ article.title }}</p>
-        <p class="article-author">작성자: <a href="{% url 'users:profile' article.author %}" class="author-link">{{article.author }}</a></p>
+        <p class="article-author">작성자: <a href="{% url 'users:profile' article.author %}"
+                class="author-link">{{article.author }}</a></p>
         {% if article.image %}
         <div class="article-image">
             <img src="{{ article.image.url }}" alt="제품사진">
@@ -24,14 +25,42 @@
         <a href="{% url 'articles:edit' article.pk %}" class="btn btn-primary">글 수정</a>
     </div>
     <div class="button-group">
-        <form action="{% url 'articles:like' article.pk %}" method="POST" >
+        <form action="{% url 'articles:like' article.pk %}" method="POST">
             {% csrf_token %}
             {% if user in article.like_users.all %}
-            <input type="submit" value="좋아요 취소">
+            <input type="submit" class="btn btn-danger" value="좋아요 취소">
             {% else %}
-            <input type="submit" value="좋아요">
+            <input type="submit" class="btn btn-primary" value="좋아요">
             {% endif %}
         </form>
     </div>
 </div>
+
+{% if request.user.is_authenticated %}
+<br>
+<hr>
+<h3>댓글 {{ comments|length }}개</h3>
+<form action="{% url 'articles:comment_create' article.pk %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <input type="submit" class="btn btn-primary" value="댓글작성">
+</form>
+{% endif %}
+
+{% for comment in comments %}
+<ul>
+    <li>{{ comment.content }} - <a href="{% url 'users:profile' comment.user %}" class="author-link">{{ comment.user.username }}</a></li>
+<!-- 댓글 작성자 누르면 프로필로 이동할 수 있게끔 해주기.  -->
+    {% if user == comment.user %}
+    <form action="{% url 'articles:comment_delete' article.pk comment.pk%}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger" value="삭제">
+    </form>
+    {% endif %}
+</ul>
+
+{% empty %}
+<p>댓글이 없습니다.</p>
+
+{% endfor %}
 {% endblock content %}

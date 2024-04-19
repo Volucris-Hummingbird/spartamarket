@@ -8,3 +8,4 @@ class User(AbstractUser):
         "self", symmetrical=False, related_name="followers"
     )
     
+
