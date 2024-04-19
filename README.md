@@ -39,4 +39,4 @@ localhost http://127.0.0.1:8000/
 
 ## ERD
 
-![Spartamarket_lim_ERD](https://github.com/Volucris-Hummingbird/spartamarket/assets/159241129/8587842d-d2a0-42a8-944e-b300cd1dc67d)
+![Spartamarket (2)](https://github.com/Volucris-Hummingbird/spartamarket/assets/159241129/26af6b65-6860-41a5-b7b0-0f6598047e8a)
